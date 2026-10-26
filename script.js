@@ -132,4 +132,10 @@ function carregarBoletim() {
 
   cardTotalFaltas.innerText = totalFaltasGeral;
   cardBomDesempenho.innerText = totalBomDesempenho;
-  cardAtencao.innerText = totalAtenc
+  cardAtencao.innerText = totalAtencao;
+
+  // NOTA: O percentual de 92% de frequência é apenas demonstrativo/fictício nesta versão.
+}
+
+// Executa a função para construir a página
+carregarBoletim();
