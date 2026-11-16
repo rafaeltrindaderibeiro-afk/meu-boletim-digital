@@ -768,4 +768,88 @@ async function salvarAlteracoes() {
     exibirMensagem(
       mensagemEdicao,
       "Existem campos inválidos destacados em vermelho. Notas devem ser de 0 a 10 (ou vazio) e faltas devem ser inteiros (0 ou maior).",
-      "msg-
+      "msg-erro"
+    );
+    return;
+  }
+
+  btnSalvar.disabled = true;
+  btnCancelar.disabled = true;
+  exibirMensagem(mensagemEdicao, "Salvando...", "msg-info");
+
+  try {
+    const resposta = await fetch(CONFIG_ALUNO.apiUrl + "/api/v1/boletins/salvar", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        turma: CONFIG_ALUNO.turma,
+        numero_chamada: CONFIG_ALUNO.numeroChamada,
+        pin: pinSessao,
+        dados: {
+          disciplinas: novasDisciplinas
+        }
+      })
+    });
+
+    if (!resposta.ok) {
+      if (resposta.status === 401) {
+        exibirMensagem(mensagemEdicao, "Sessão inválida ou PIN expirado. Atualize a página e entre novamente.", "msg-erro");
+      } else if (resposta.status === 429) {
+        exibirMensagem(mensagemEdicao, "Muitas tentativas. Aguarde um minuto e tente novamente.", "msg-erro");
+      } else {
+        exibirMensagem(mensagemEdicao, "Não foi possível salvar as alterações. Tente novamente.", "msg-erro");
+      }
+      return;
+    }
+
+    disciplinasAtuais = novasDisciplinas;
+    modoEdicao = false;
+    atualizarBotoesEdicao();
+    montarBoletim();
+    atualizarGraficos();
+    exibirMensagem(mensagemEdicao, "Dados salvos com sucesso.", "msg-sucesso");
+  } catch (erro) {
+    exibirMensagem(mensagemEdicao, "Não foi possível conectar ao servidor. Tente salvar novamente.", "msg-erro");
+  } finally {
+    btnSalvar.disabled = false;
+    btnCancelar.disabled = false;
+  }
+}
+
+// Configura os eventos dos botões e do campo de PIN ao carregar a página
+function iniciarEventos() {
+  const btnEntrar = document.getElementById("btn-entrar");
+  const inputPin = document.getElementById("input-pin");
+  const btnAlterar = document.getElementById("btn-alterar");
+  const btnSalvar = document.getElementById("btn-salvar");
+  const btnCancelar = document.getElementById("btn-cancelar");
+  const mensagemEdicao = document.getElementById("mensagem-edicao");
+
+  btnEntrar.addEventListener("click", abrirBoletim);
+
+  inputPin.addEventListener("keydown", function (evento) {
+    if (evento.key === "Enter") {
+      abrirBoletim();
+    }
+  });
+
+  btnAlterar.addEventListener("click", function () {
+    modoEdicao = true;
+    exibirMensagem(mensagemEdicao, "", "");
+    atualizarBotoesEdicao();
+    montarBoletim();
+  });
+
+  btnCancelar.addEventListener("click", function () {
+    modoEdicao = false;
+    exibirMensagem(mensagemEdicao, "", "");
+    atualizarBotoesEdicao();
+    montarBoletim();
+  });
+
+  btnSalvar.addEventListener("click", salvarAlteracoes);
+}
+
+iniciarEventos();daw
