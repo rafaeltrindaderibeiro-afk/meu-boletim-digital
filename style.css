@@ -1,109 +1,181 @@
 /* Configurações gerais da página */
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
-  background-color: #f9f9f9;
-  color: #000000;
-  padding: 20px;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background-color: #f4f8fc; /* Fundo claro e limpo */
+  color: #1e293b;
+  line-height: 1.5;
 }
 
-/* Cabeçalho */
-header {
-  text-align: center;
-  margin-bottom: 30px;
+/* Centraliza o conteúdo na tela */
+.container {
+  max-width: 1050px;
+  margin: 0 auto;
+  padding: 0 16px;
 }
 
-header h1 {
-  font-size: 2rem;
-  margin-bottom: 5px;
+/* Cabeçalho principal em azul */
+.cabecalho {
+  background-color: #1d4ed8; /* Cor principal: azul */
+  color: #ffffff;
+  padding: 24px 0;
+  border-bottom: 4px solid #38bdf8; /* Detalhe na cor secundária: azul claro */
+  margin-bottom: 24px;
+}
+
+.cabecalho h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
 }
 
 .subtitulo {
-  color: #555555;
+  color: #bae6fd; /* Azul bem claro para o subtítulo */
   font-size: 1rem;
+  margin-top: 4px;
 }
 
-/* Layout dos Cards */
-.cards-container {
+/* Grade responsiva para os 5 cards de resumo */
+.resumo-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 15px;
-  margin-bottom: 30px;
+  gap: 14px;
+  margin-bottom: 24px;
 }
 
-/* Estilo individual de cada Card */
+/* Visual dos cards: cantos levemente arredondados e borda fina */
 .card {
   background-color: #ffffff;
-  border: 1px solid #000000;
-  border-radius: 8px;
-  padding: 15px;
-  text-align: center;
+  border: 1px solid #cbd5e1;
+  border-top: 3px solid #0284c7; /* Detalhe superior em azul claro/ciano */
+  border-radius: 6px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-.card h3 {
-  font-size: 0.9rem;
-  color: #333333;
-  margin-bottom: 10px;
+.card-titulo {
+  font-size: 0.85rem;
+  color: #475569;
+  font-weight: 600;
+  margin-bottom: 8px;
 }
 
-.card p {
-  font-size: 1.5rem;
-  font-weight: bold;
+.card-valor {
+  font-size: 1.7rem;
+  color: #1e3a8a;
+  font-weight: 700;
 }
 
-.legenda-frequencia {
-  display: block;
-  font-size: 0.75rem;
-  color: #666666;
-  margin-top: 5px;
+.card-detalhe {
+  font-size: 0.8rem;
+  color: #0284c7;
+  font-weight: 600;
+  margin-top: 4px;
 }
 
-/* Tabela Responsiva */
-.tabela-container {
-  overflow-x: auto; /* Permite rolar para o lado no celular se a tela for pequena */
+/* Cores de destaque nos números dos cards */
+.texto-positivo {
+  color: #15803d;
+}
+
+.texto-atencao {
+  color: #b45309;
+}
+
+/* Caixa branca onde fica a tabela */
+.secao-tabela {
   background-color: #ffffff;
-  border: 1px solid #000000;
-  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 32px;
+}
+
+.secao-tabela h2 {
+  font-size: 1.2rem;
+  color: #1e3a8a;
+  margin-bottom: 16px;
+}
+
+/* Permite rolar a tabela para o lado no celular sem quebrar a página */
+.tabela-responsiva {
+  width: 100%;
+  overflow-x: auto;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  text-align: left;
-}
-
-th, td {
-  padding: 12px 15px;
-  border-bottom: 1px solid #e0e0e0;
+  min-width: 680px; /* Garante que as colunas não fiquem espremidas no celular */
 }
 
 th {
-  background-color: #000000;
-  color: #ffffff;
-  font-weight: normal;
+  background-color: #e0f2fe; /* Fundo azul claro no topo da tabela */
+  color: #1e3a8a;
+  font-size: 0.9rem;
+  text-align: left;
+  padding: 12px;
+  border-bottom: 2px solid #bae6fd;
 }
 
-tr:hover {
-  background-color: #f1f1f1;
+td {
+  padding: 12px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.95rem;
 }
 
-/* Destaques para a situação */
-.situacao-bom {
-  font-weight: bold;
-  color: #000000;
+tbody tr:hover {
+  background-color: #f8fafc;
 }
 
-.situacao-atencao {
-  font-weight: bold;
-  color: #555555;
+/* Alinhamento central para notas e faltas */
+.centro {
+  text-align: center;
 }
 
-.situacao-indisponivel {
-  color: #888888;
+/* Estilo para notas ainda não lançadas */
+.nota-ausente {
+  color: #94a3b8;
   font-style: italic;
+}
+
+/* Etiquetas coloridas para a coluna Situação */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.badge-bom {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.badge-atencao {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.badge-neutro {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+/* Ajustes extras para telas pequenas (celulares) */
+@media (max-width: 600px) {
+  .cabecalho h1 {
+    font-size: 1.5rem;
+  }
+
+  .secao-tabela {
+    padding: 14px;
+  }
 }

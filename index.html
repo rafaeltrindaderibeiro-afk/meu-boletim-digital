@@ -2,67 +2,78 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <!-- Faz o site se adaptar bem tanto no celular quanto no computador -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Boletim Digital - 8º Ano</title>
-  <!-- Link para o arquivo de estilos CSS -->
+  <!-- Conecta este HTML com o arquivo de visual (CSS) -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Cabeçalho do projeto -->
-  <header>
-    <h1>Boletim Digital</h1>
-    <p class="subtitulo">8º Ano | Estudante Exemplo</p>
+  <!-- Cabeçalho da página -->
+  <header class="cabecalho">
+    <div class="container">
+      <h1>Boletim Digital</h1>
+      <p class="subtitulo">8º Ano • Estudante Exemplo</p>
+    </div>
   </header>
 
-  <main>
-    <!-- Área de cards com o resumo geral -->
-    <section class="cards-container">
+  <main class="container">
+    <!-- Área superior com os 5 cards de resumo -->
+    <section class="resumo-cards" aria-label="Resumo do boletim">
       <div class="card">
-        <h3>Média Geral</h3>
-        <p id="card-media-geral">—</p>
+        <span class="card-titulo">Média Geral</span>
+        <strong class="card-valor" id="media-geral">—</strong>
       </div>
+
       <div class="card">
-        <h3>Total de Faltas</h3>
-        <p id="card-total-faltas">—</p>
+        <span class="card-titulo">Total de Faltas</span>
+        <strong class="card-valor" id="total-faltas">—</strong>
       </div>
+
       <div class="card">
-        <h3>Bom Desempenho</h3>
-        <p id="card-bom-desempenho">—</p>
+        <span class="card-titulo">Bom Desempenho</span>
+        <strong class="card-valor texto-positivo" id="qtd-bom">—</strong>
       </div>
+
       <div class="card">
-        <h3>Precisa de Atenção</h3>
-        <p id="card-atencao">—</p>
+        <span class="card-titulo">Precisam de Atenção</span>
+        <strong class="card-valor texto-atencao" id="qtd-atencao">—</strong>
       </div>
+
       <div class="card">
-        <h3>Frequência</h3>
-        <p id="card-frequencia">92%</p>
-        <span class="legenda-frequencia">Frequência adequada</span>
+        <span class="card-titulo">Frequência</span>
+        <strong class="card-valor" id="frequencia-valor">—</strong>
+        <span class="card-detalhe" id="frequencia-texto">—</span>
       </div>
     </section>
 
-    <!-- Tabela responsiva de disciplinas -->
-    <section class="tabela-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Disciplina</th>
-            <th>1º Tri</th>
-            <th>2º Tri</th>
-            <th>3º Tri</th>
-            <th>Média</th>
-            <th>Faltas</th>
-            <th>Situação</th>
-          </tr>
-        </thead>
-        <tbody id="tabela-boletim">
-          <!-- As linhas serão preenchidas automaticamente pelo JavaScript -->
-        </tbody>
-      </table>
+    <!-- Área da tabela de notas -->
+    <section class="secao-tabela">
+      <h2>Notas e Faltas por Disciplina</h2>
+      <!-- Essa div permite rolar a tabela para o lado em telas de celular -->
+      <div class="tabela-responsiva">
+        <table>
+          <thead>
+            <tr>
+              <th>Disciplina</th>
+              <th>1º Tri</th>
+              <th>2º Tri</th>
+              <th>3º Tri</th>
+              <th>Média</th>
+              <th>Faltas</th>
+              <th>Situação</th>
+            </tr>
+          </thead>
+          <!-- As linhas das 15 disciplinas serão criadas aqui pelo JavaScript -->
+          <tbody id="corpo-tabela">
+          </tbody>
+        </table>
+      </div>
     </section>
   </main>
 
-  <!-- Link para o arquivo de código JavaScript -->
+  <!-- Conecta este HTML com o arquivo de programação (JavaScript) -->
   <script src="script.js"></script>
 </body>
 </html>
