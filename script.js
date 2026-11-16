@@ -29,6 +29,11 @@ let pinSessao = "";
 let disciplinasAtuais = [];
 let modoEdicao = false;
 
+// Instâncias dos gráficos (camada apenas de leitura)
+let graficoMedias = null;
+let graficoEvolucao = null;
+let graficoFaltas = null;
+
 // Converte qualquer nota válida dos dados antigos para a escala de 0 a 10
 function normalizarNota(valor) {
   if (valor === null || valor === undefined || valor === "") {
@@ -352,6 +357,282 @@ function montarBoletim() {
   document.getElementById("frequencia-texto").textContent = "Frequência adequada";
 }
 
+// Gráfico 1: Média por disciplina (barras horizontais)
+function atualizarGraficoMedias() {
+  const canvas = document.getElementById("graficoMediasDisciplinas");
+  if (!canvas || typeof Chart === "undefined") {
+    return;
+  }
+
+  if (graficoMedias) {
+    graficoMedias.destroy();
+  }
+
+  const nomesDisciplinas = disciplinasAtuais.map(function (item) {
+    return item.disciplina;
+  });
+
+  const mediasDisciplinas = disciplinasAtuais.map(function (item) {
+    return calcularMedia([item.tri1, item.tri2, item.tri3]);
+  });
+
+  graficoMedias = new Chart(canvas, {
+    type: "bar",
+    data: {
+      labels: nomesDisciplinas,
+      datasets: [
+        {
+          label: "Média",
+          data: mediasDisciplinas,
+          backgroundColor: "#0284c7",
+          hoverBackgroundColor: "#1d4ed8",
+          borderRadius: 4
+        }
+      ]
+    },
+    options: {
+      indexAxis: "y",
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          callbacks: {
+            label: function (contexto) {
+              const valor = contexto.parsed.x;
+              if (valor === null || valor === undefined) {
+                return contexto.label + ": Sem nota";
+              }
+              return contexto.label + ": " + formatarNota(valor);
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          min: 0,
+          max: 10,
+          ticks: {
+            color: "#475569",
+            font: { size: 11 }
+          },
+          grid: {
+            color: "#e2e8f0"
+          }
+        },
+        y: {
+          ticks: {
+            autoSkip: false,
+            color: "#1e293b",
+            font: { size: 10 }
+          },
+          grid: {
+            display: false
+          }
+        }
+      }
+    }
+  });
+}
+
+// Gráfico 2: Evolução da média geral por trimestre (linha)
+function atualizarGraficoEvolucao() {
+  const canvas = document.getElementById("graficoEvolucaoTrimestres");
+  if (!canvas || typeof Chart === "undefined") {
+    return;
+  }
+
+  if (graficoEvolucao) {
+    graficoEvolucao.destroy();
+  }
+
+  const notasTri1 = disciplinasAtuais.map(function (item) {
+    return item.tri1;
+  });
+  const notasTri2 = disciplinasAtuais.map(function (item) {
+    return item.tri2;
+  });
+  const notasTri3 = disciplinasAtuais.map(function (item) {
+    return item.tri3;
+  });
+
+  const mediaTri1 = calcularMedia(notasTri1);
+  const mediaTri2 = calcularMedia(notasTri2);
+  const mediaTri3 = calcularMedia(notasTri3);
+
+  graficoEvolucao = new Chart(canvas, {
+    type: "line",
+    data: {
+      labels: ["1º Tri", "2º Tri", "3º Tri"],
+      datasets: [
+        {
+          label: "Média Geral",
+          data: [mediaTri1, mediaTri2, mediaTri3],
+          borderColor: "#1d4ed8",
+          backgroundColor: "rgba(29, 78, 216, 0.12)",
+          pointBackgroundColor: "#0284c7",
+          pointBorderColor: "#1d4ed8",
+          pointRadius: 5,
+          pointHoverRadius: 6,
+          borderWidth: 2.5,
+          tension: 0.25,
+          fill: true
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          callbacks: {
+            label: function (contexto) {
+              const valor = contexto.parsed.y;
+              if (valor === null || valor === undefined) {
+                return contexto.label + ": Sem nota";
+              }
+              return contexto.label + ": " + formatarNota(valor);
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          min: 0,
+          max: 10,
+          ticks: {
+            color: "#475569",
+            font: { size: 11 }
+          },
+          grid: {
+            color: "#e2e8f0"
+          }
+        },
+        x: {
+          ticks: {
+            color: "#1e293b",
+            font: { size: 11, weight: "600" }
+          },
+          grid: {
+            display: false
+          }
+        }
+      }
+    }
+  });
+}
+
+// Gráfico 3: Faltas por trimestre (barras verticais)
+function atualizarGraficoFaltas() {
+  const canvas = document.getElementById("graficoFaltasTrimestres");
+  if (!canvas || typeof Chart === "undefined") {
+    return;
+  }
+
+  if (graficoFaltas) {
+    graficoFaltas.destroy();
+  }
+
+  let faltasTri1 = 0;
+  let faltasTri2 = 0;
+  let faltasTri3 = 0;
+
+  disciplinasAtuais.forEach(function (item) {
+    const faltas = Array.isArray(item.faltas) ? item.faltas : [0, 0, 0];
+    faltasTri1 = faltasTri1 + (Number(faltas[0]) || 0);
+    faltasTri2 = faltasTri2 + (Number(faltas[1]) || 0);
+    faltasTri3 = faltasTri3 + (Number(faltas[2]) || 0);
+  });
+
+  const totalFaltas = faltasTri1 + faltasTri2 + faltasTri3;
+  const referenciaInterna = 350;
+  const situacaoCritica = totalFaltas >= referenciaInterna;
+
+  const badgeEstado = document.getElementById("estadoFaltas");
+  const cardFaltas = document.getElementById("card-grafico-faltas");
+
+  if (badgeEstado && cardFaltas) {
+    if (situacaoCritica) {
+      badgeEstado.classList.remove("oculto");
+      cardFaltas.classList.add("estado-perigo");
+    } else {
+      badgeEstado.classList.add("oculto");
+      cardFaltas.classList.remove("estado-perigo");
+    }
+  }
+
+  const corBarra = situacaoCritica ? "#dc2626" : "#0284c7";
+  const corBarraHover = situacaoCritica ? "#b91c1c" : "#1d4ed8";
+
+  graficoFaltas = new Chart(canvas, {
+    type: "bar",
+    data: {
+      labels: ["1º Tri", "2º Tri", "3º Tri"],
+      datasets: [
+        {
+          label: "Faltas",
+          data: [faltasTri1, faltasTri2, faltasTri3],
+          backgroundColor: corBarra,
+          hoverBackgroundColor: corBarraHover,
+          borderRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          callbacks: {
+            label: function (contexto) {
+              const valor = contexto.parsed.y;
+              const palavra = valor === 1 ? "falta" : "faltas";
+              return contexto.label + ": " + valor + " " + palavra;
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            precision: 0,
+            color: "#475569",
+            font: { size: 11 }
+          },
+          grid: {
+            color: "#e2e8f0"
+          }
+        },
+        x: {
+          ticks: {
+            color: "#1e293b",
+            font: { size: 11, weight: "600" }
+          },
+          grid: {
+            display: false
+          }
+        }
+      }
+    }
+  });
+}
+
+// Atualiza os três gráficos a partir dos dados já carregados em memória
+function atualizarGraficos() {
+  atualizarGraficoMedias();
+  atualizarGraficoEvolucao();
+  atualizarGraficoFaltas();
+}
+
 // Faz login na API usando turma, número de chamada e PIN digitado
 async function abrirBoletim() {
   const inputPin = document.getElementById("input-pin");
@@ -421,6 +702,7 @@ async function abrirBoletim() {
     modoEdicao = false;
     atualizarBotoesEdicao();
     montarBoletim();
+    atualizarGraficos();
   } catch (erro) {
     exibirMensagem(mensagemLogin, "Não foi possível conectar ao servidor. Tente novamente.", "msg-erro");
   } finally {
@@ -486,87 +768,4 @@ async function salvarAlteracoes() {
     exibirMensagem(
       mensagemEdicao,
       "Existem campos inválidos destacados em vermelho. Notas devem ser de 0 a 10 (ou vazio) e faltas devem ser inteiros (0 ou maior).",
-      "msg-erro"
-    );
-    return;
-  }
-
-  btnSalvar.disabled = true;
-  btnCancelar.disabled = true;
-  exibirMensagem(mensagemEdicao, "Salvando...", "msg-info");
-
-  try {
-    const resposta = await fetch(CONFIG_ALUNO.apiUrl + "/api/v1/boletins/salvar", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        turma: CONFIG_ALUNO.turma,
-        numero_chamada: CONFIG_ALUNO.numeroChamada,
-        pin: pinSessao,
-        dados: {
-          disciplinas: novasDisciplinas
-        }
-      })
-    });
-
-    if (!resposta.ok) {
-      if (resposta.status === 401) {
-        exibirMensagem(mensagemEdicao, "Sessão inválida ou PIN expirado. Atualize a página e entre novamente.", "msg-erro");
-      } else if (resposta.status === 429) {
-        exibirMensagem(mensagemEdicao, "Muitas tentativas. Aguarde um minuto e tente novamente.", "msg-erro");
-      } else {
-        exibirMensagem(mensagemEdicao, "Não foi possível salvar as alterações. Tente novamente.", "msg-erro");
-      }
-      return;
-    }
-
-    disciplinasAtuais = novasDisciplinas;
-    modoEdicao = false;
-    atualizarBotoesEdicao();
-    montarBoletim();
-    exibirMensagem(mensagemEdicao, "Dados salvos com sucesso.", "msg-sucesso");
-  } catch (erro) {
-    exibirMensagem(mensagemEdicao, "Não foi possível conectar ao servidor. Tente salvar novamente.", "msg-erro");
-  } finally {
-    btnSalvar.disabled = false;
-    btnCancelar.disabled = false;
-  }
-}
-
-// Configura os eventos dos botões e do campo de PIN ao carregar a página
-function iniciarEventos() {
-  const btnEntrar = document.getElementById("btn-entrar");
-  const inputPin = document.getElementById("input-pin");
-  const btnAlterar = document.getElementById("btn-alterar");
-  const btnSalvar = document.getElementById("btn-salvar");
-  const btnCancelar = document.getElementById("btn-cancelar");
-  const mensagemEdicao = document.getElementById("mensagem-edicao");
-
-  btnEntrar.addEventListener("click", abrirBoletim);
-
-  inputPin.addEventListener("keydown", function (evento) {
-    if (evento.key === "Enter") {
-      abrirBoletim();
-    }
-  });
-
-  btnAlterar.addEventListener("click", function () {
-    modoEdicao = true;
-    exibirMensagem(mensagemEdicao, "", "");
-    atualizarBotoesEdicao();
-    montarBoletim();
-  });
-
-  btnCancelar.addEventListener("click", function () {
-    modoEdicao = false;
-    exibirMensagem(mensagemEdicao, "", "");
-    atualizarBotoesEdicao();
-    montarBoletim();
-  });
-
-  btnSalvar.addEventListener("click", salvarAlteracoes);
-}
-
-iniciarEventos();
+      "msg-

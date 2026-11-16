@@ -378,3 +378,97 @@ tbody tr:hover {
   background-color: #fef2f2 !important;
   box-shadow: 0 0 0 2px #fecaca !important;
 }
+
+/* =========================================================
+   ESTILOS DA ETAPA 3 — ÁREA DOS GRÁFICOS
+   ========================================================= */
+
+.area-graficos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.grafico-card {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-top: 3px solid #0284c7;
+  border-radius: 6px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.grafico-card h2 {
+  font-size: 1.05rem;
+  color: #1e3a8a;
+  margin-bottom: 12px;
+}
+
+.grafico-cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.grafico-cabecalho h2 {
+  margin-bottom: 0;
+}
+
+.grafico-container {
+  position: relative;
+  width: 100%;
+  height: 330px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Destaque visual quando as faltas atingem a faixa crítica */
+.grafico-card.estado-perigo {
+  border-color: #dc2626;
+  border-top-color: #dc2626;
+  background-color: #fef2f2;
+}
+
+.badge-perigo {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+  white-space: nowrap;
+}
+
+/* Tablet: 2 gráficos lado a lado e 1 abaixo */
+@media (max-width: 960px) {
+  .area-graficos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .grafico-container {
+    height: 300px;
+  }
+}
+
+/* Celular: 1 gráfico por linha */
+@media (max-width: 640px) {
+  .area-graficos {
+    grid-template-columns: 1fr;
+  }
+
+  .grafico-container {
+    height: 250px;
+  }
+
+  .grafico-container-medias {
+    height: 360px;
+  }
+}
