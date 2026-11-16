@@ -179,3 +179,202 @@ tbody tr:hover {
     padding: 14px;
   }
 }
+
+/* =========================================================
+   ESTILOS DA ETAPA 2 — ACESSO POR PIN E EDIÇÃO DO BOLETIM
+   ========================================================= */
+
+.oculto {
+  display: none !important;
+}
+
+/* Área de login por PIN */
+.card-login {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-top: 3px solid #0284c7;
+  border-radius: 6px;
+  max-width: 440px;
+  margin: 24px auto;
+  padding: 24px;
+}
+
+.card-login h2 {
+  font-size: 1.25rem;
+  color: #1e3a8a;
+  margin-bottom: 6px;
+}
+
+.info-aluno-fixa {
+  font-size: 0.9rem;
+  color: #475569;
+  background-color: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.form-login {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label-pin {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.linha-pin {
+  display: flex;
+  gap: 10px;
+}
+
+.linha-pin input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #1e293b;
+}
+
+.linha-pin input:focus {
+  outline: none;
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 2px #bae6fd;
+}
+
+/* Botões padrão do sistema */
+.btn-principal,
+.btn-secundario,
+.btn-cancelar {
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color 0.15s ease;
+}
+
+.btn-principal {
+  background-color: #1d4ed8;
+  color: #ffffff;
+}
+
+.btn-principal:hover:not(:disabled) {
+  background-color: #1e40af;
+}
+
+.btn-secundario {
+  background-color: #e0f2fe;
+  color: #1e3a8a;
+  border-color: #bae6fd;
+}
+
+.btn-secundario:hover:not(:disabled) {
+  background-color: #bae6fd;
+}
+
+.btn-cancelar {
+  background-color: #f1f5f9;
+  color: #475569;
+  border-color: #cbd5e1;
+}
+
+.btn-cancelar:hover:not(:disabled) {
+  background-color: #e2e8f0;
+}
+
+.btn-principal:disabled,
+.btn-secundario:disabled,
+.btn-cancelar:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Mensagens de status (login e salvamento) */
+.mensagem-status {
+  margin-top: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  min-height: 1.3em;
+}
+
+.msg-info {
+  color: #0284c7;
+}
+
+.msg-sucesso {
+  color: #15803d;
+}
+
+.msg-erro {
+  color: #b91c1c;
+}
+
+/* Topo da seção da tabela com botões de ação */
+.topo-tabela {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.topo-tabela h2 {
+  margin-bottom: 0;
+}
+
+.acoes-tabela {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Campos de edição dentro das células da tabela */
+.celula-edicao {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+
+.campo-mini {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  width: 108px;
+  font-size: 0.78rem;
+  color: #475569;
+  font-weight: 600;
+}
+
+.input-edicao {
+  width: 58px;
+  padding: 4px 6px;
+  border: 1px solid #94a3b8;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  text-align: center;
+  color: #1e293b;
+  background-color: #ffffff;
+}
+
+.input-edicao:focus {
+  outline: none;
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 2px #bae6fd;
+}
+
+.input-invalido {
+  border-color: #dc2626 !important;
+  background-color: #fef2f2 !important;
+  box-shadow: 0 0 0 2px #fecaca !important;
+}
